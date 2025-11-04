@@ -1,0 +1,39 @@
+{
+  "name": "OH Survey App",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    }
+  },
+
+  "forwardPorts": [3000],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "React App",
+      "onAutoForward": "notify",
+      "protocol": "https",
+      "visibility": "public"
+    }
+  },
+
+  "postCreateCommand": "npm install",
+
+  "postStartCommand": "echo '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ Setup complete! Run: npm start\n\n🚨 IMPORTANT: DO NOT USE localhost:3000!\n\n📍 To access the app:\n   1. Run: npm start\n   2. Wait for the port to be forwarded\n   3. Click PORTS tab at the bottom\n   4. Copy the forwarded URL for port 3000\n   5. Add this URL to Azure App Registration redirect URIs\n   6. Then open the URL in your browser\n\n📖 Full guide: .devcontainer/HOW_TO_ACCESS.md\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  }
+}
