@@ -7,6 +7,7 @@ import Button from "./common/Button";
 import { buildWordContent } from "./helpers";
 import { Document, Packer, Paragraph, Table } from "docx";
 import ConfirmDialog from "./common/ConfirmDialog";
+import SignatureCanvas from "react-signature-canvas";
 
 // Import pdfmake with error handling
 let pdfMake: any = null;
@@ -45,8 +46,7 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
   const [completionDialogOpen, setCompletionDialogOpen] = useState(false);
   
   // Canvas signature refs and state
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const sigCanvas = useRef<any>(null);
   const [hasSignature, setHasSignature] = useState(!!data.verificationSignature);
 
   // Generate PDF preview on component mount
@@ -56,72 +56,22 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
 
   // Initialize canvas with saved signature if it exists
   useEffect(() => {
-    if (signature && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const img = new Image();
-        img.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-        img.src = signature;
-      }
+    if (signature && sigCanvas.current) {
+      sigCanvas.current.fromDataURL(signature);
     }
   }, [signature]);
 
-  // Canvas drawing functions
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!hasViewedPDF || readOnly) return;
-    setIsDrawing(true);
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
-  };
-
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !hasViewedPDF || readOnly) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = 'black';
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+  // Track when user starts drawing to enable save button
+  const handleSignatureEnd = () => {
+    if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
       setHasSignature(true);
     }
   };
 
-  const stopDrawing = () => {
-    setIsDrawing(false);
-  };
-
   const clearSignature = () => {
     if (readOnly) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (sigCanvas.current) {
+      sigCanvas.current.clear();
       setHasSignature(false);
       setSignature("");
     }
@@ -129,11 +79,11 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
 
   const saveSignature = () => {
     if (readOnly) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const dataUrl = canvas.toDataURL('image/png');
-    setSignature(dataUrl);
+    if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
+      const dataUrl = sigCanvas.current.toDataURL('image/png');
+      setSignature(dataUrl);
+      setHasSignature(true);
+    }
   };
 
   // Helper to reconstruct area path from numbering (e.g. '1.2.1')
@@ -162,11 +112,6 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
     if (!pdfMake) {
       alert('PDF generation is not available in your current environment. Please use the Word document download instead.');
       return;
-    }
-
-    let signatureImage = data.verificationSignature || signature;
-    if (canvasRef.current && hasSignature && !signatureImage) {
-      signatureImage = canvasRef.current.toDataURL("image/png");
     }
 
     const docDefinition: any = {
@@ -354,13 +299,6 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
 
           return section;
         })),
-
-        // Add Preview comment + signature
-        { text: "General Comments", style: "subheader" },
-        { text: data.verificationComment || comment || "No additional comments.", fontSize: 10, margin: [0, 0, 0, 10] },
-        signatureImage
-          ? { image: signatureImage, width: 150, margin: [0, 10, 0, 0] }
-          : { text: "Signature: (none)", italics: true },
       ],
       styles: {
         header: { fontSize: 16, bold: true, alignment: "center", margin: [0, 0, 0, 10] },
@@ -667,20 +605,16 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
                         <p className="text-xs text-gray-500 mb-2">
                           Draw your signature in the canvas below
                         </p>
-                        <div
-                          className="border border-gray-300 rounded-md mb-2 bg-white"
-                          style={{ height: "200px", width: "100%" }}
-                        >
-                          <canvas
-                            ref={canvasRef}
-                            width={500}
-                            height={200}
-                            className="w-full h-full cursor-crosshair bg-white"
-                            onMouseDown={startDrawing}
-                            onMouseMove={draw}
-                            onMouseUp={stopDrawing}
-                            onMouseLeave={stopDrawing}
-                            style={{ touchAction: 'none', backgroundColor: 'white' }}
+                        <div className="border border-gray-300 rounded-md p-1 mb-2 w-full" style={{ height: "200px" }}>
+                          <SignatureCanvas
+                            ref={sigCanvas}
+                            penColor="black"
+                            canvasProps={{
+                              width: 500,
+                              height: 200,
+                              className: "sigCanvas",
+                            }}
+                            onEnd={handleSignatureEnd}
                           />
                         </div>
                      <div className="flex justify-between items-center">
