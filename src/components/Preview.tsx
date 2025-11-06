@@ -605,14 +605,14 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
                         <p className="text-xs text-gray-500 mb-2">
                           Draw your signature in the canvas below
                         </p>
-                        <div className="border border-gray-300 rounded-md p-1 mb-2 w-full" style={{ height: "200px" }}>
+                        <div className="border border-gray-300 rounded-md bg-white mb-2 w-full" style={{ height: "200px" }}>
                           <SignatureCanvas
                             ref={sigCanvas}
                             penColor="black"
+                            backgroundColor="white"
                             canvasProps={{
-                              width: 500,
-                              height: 200,
-                              className: "sigCanvas",
+                              className: "sigCanvas w-full h-full",
+                              style: { width: '100%', height: '100%' }
                             }}
                             onEnd={handleSignatureEnd}
                           />
@@ -697,7 +697,7 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
           title="Survey Completed!"
           message="Your survey has been successfully completed and saved. You will now be returned to the dashboard."
           confirmText="OK"
-          cancelText=""
+          cancelText="Cancel"
           onConfirm={confirmCompleteSurvey}
           onCancel={() => setCompletionDialogOpen(false)}
         />
