@@ -85,19 +85,42 @@ export default function OHSimpleApp({
     setCurrentAreaPath(null);
   };
 
-  // --- Mark Area as Completed ---
+  // --- Mark Area as Completed (Immutable) ---
   const markCompleted = (areas: typeof data.areas, path: AreaPath) => {
-    const main = areas[path.main];
-    if (!main) return;
-    if (path.ss !== undefined) {
-      const subSub = main.subAreas?.[path.sub ?? 0]?.subAreas?.[path.ss];
-      if (subSub) subSub.detailsCompleted = true;
-    } else if (path.sub !== undefined) {
-      const sub = main.subAreas?.[path.sub];
-      if (sub) sub.detailsCompleted = true;
-    } else {
-      main.detailsCompleted = true;
-    }
+    return areas.map((main, mainIdx) => {
+      if (mainIdx !== path.main) return main;
+
+      // If it's a sub-sub area
+      if (path.ss !== undefined && path.sub !== undefined) {
+        return {
+          ...main,
+          subAreas: main.subAreas?.map((sub, subIdx) => {
+            if (subIdx !== path.sub) return sub;
+            return {
+              ...sub,
+              subAreas: sub.subAreas?.map((ss, ssIdx) => {
+                if (ssIdx !== path.ss) return ss;
+                return { ...ss, detailsCompleted: true };
+              }),
+            };
+          }),
+        };
+      }
+
+      // If it's a sub area
+      if (path.sub !== undefined) {
+        return {
+          ...main,
+          subAreas: main.subAreas?.map((sub, subIdx) => {
+            if (subIdx !== path.sub) return sub;
+            return { ...sub, detailsCompleted: true };
+          }),
+        };
+      }
+
+      // If it's a main area
+      return { ...main, detailsCompleted: true };
+    });
   };
 
   // --- Handle Preview Completion ---
@@ -301,9 +324,11 @@ export default function OHSimpleApp({
                   }
 
                   setData((prev) => {
-                    const updated = [...prev.areas];
-                    markCompleted(updated, path);
-                    return { ...prev, areas: updated };
+                    const updatedAreas = markCompleted(prev.areas, path);
+                    const updatedData = { ...prev, areas: updatedAreas };
+                    // ✅ FIXED: Save the data immediately after marking as completed
+                    onSaveSurvey(updatedData);
+                    return updatedData;
                   });
                   setMode("survey");
                   setCurrentAreaPath(null);

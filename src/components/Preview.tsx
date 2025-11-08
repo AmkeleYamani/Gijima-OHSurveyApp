@@ -408,7 +408,7 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
       verificationComment: comment,
       verificationSignature: signature
     };
-    
+
     // Pass the completed survey back to parent
     onNext(completedSurvey);
     setCompletionDialogOpen(false);
@@ -437,12 +437,13 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
                   </h3>
                   <div className="mt-2 text-sm text-yellow-700">
                     <ul className="list-disc pl-5 space-y-1">
-                      <li>Click "Download Word Report" to download the complete comprehensive report (for your records)</li>
-                      <li>Click "View PDF Fieldsheet" to view and verify the survey data (required to enable comment and signature sections)</li>
+                      <li>Click "Download Word Report" to preview the comprehensive report (optional)</li>
+                      <li>Click "View PDF Fieldsheet" to view and verify the survey data (required)</li>
                       <li>Verify all survey data, measurements, and equipment information</li>
                       <li>Check for any missing or incorrect information</li>
-                      <li>Provide detailed comments about your review</li>
-                      <li>Draw your signature to confirm the accuracy of the document</li>
+                      <li>Provide detailed comments about your review (required)</li>
+                      <li>Draw your signature to confirm the accuracy of the document (required)</li>
+                      <li><strong>When you click "Complete Survey", both the PDF Fieldsheet (with your signature) and Word Report will be automatically downloaded</strong></li>
                     </ul>
                   </div>
                 </div>
