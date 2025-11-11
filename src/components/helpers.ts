@@ -1048,20 +1048,20 @@ export async function buildWordContent(
   if (data.equipment.length > 0) {
     const equipHeaderRow = new TableRow({
       children: [
-        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Equipment Name", bold: true })] })] }),
-        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Type", bold: true })] })] }),
-        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Serial No.", bold: true })] })] }),
-        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Calibration Date", bold: true })] })] }),
+        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Equipment Name", bold: true })]  })] }),
+        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Type", bold: true })]  })] }),
+        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Serial No.", bold: true })]  })] }),
+        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Calibration Date", bold: true })]  })] }),
       ],
     });
 
     const equipRows = data.equipment.map(eq =>
       new TableRow({
         children: [
-          new TableCell({ children: [new Paragraph(eq.name)] }),
-          new TableCell({ children: [new Paragraph(eq.type)] }),
-          new TableCell({ children: [new Paragraph(eq.serial)] }),
-          new TableCell({ children: [new Paragraph(eq.calibrationDate || eq.startDate || "N/A")] }),
+          new TableCell({ children: [new Paragraph(eq.name)]  }),
+          new TableCell({ children: [new Paragraph(eq.type)]  }),
+          new TableCell({ children: [new Paragraph(eq.serial)]  }),
+          new TableCell({ children: [new Paragraph(eq.calibrationDate || eq.startDate || "N/A")]  }),
         ],
       })
     );
@@ -1381,13 +1381,13 @@ export async function buildWordContent(
     areaTableRows.push(
       new TableRow({
         children: [
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "No", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Area / Location / Activity", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Measurement Position", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Measured Noise Rating Level in dB(A)", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "8-Hour Equivalent Noise Rating Level (LReq,8h)", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Raw Risk Classification of NIHL", bold: true })] })] }),
-          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Discussion", bold: true })] })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "No", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Area / Location / Activity", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Measurement Position", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Measured Noise Rating Level in dB(A)", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "8-Hour Equivalent Noise Rating Level (LReq,8h)", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Raw Risk Classification of NIHL", bold: true })]  })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Discussion", bold: true })]  })] }),
         ],
       })
     );
@@ -1419,13 +1419,13 @@ export async function buildWordContent(
     areaTableRows.push(
       new TableRow({
         children: [
-          new TableCell({ children: [new Paragraph(numbering)] }),
-          new TableCell({ children: [new Paragraph(area.name)] }),
-          new TableCell({ children: [new Paragraph(measuredLevels || "N/A")] }),
-          new TableCell({ children: [new Paragraph(avgNoiseLevel)] }),
-          new TableCell({ children: [new Paragraph(avgNoiseLevel)] }),
-          new TableCell({ children: [new Paragraph(riskClass)] }),
-          new TableCell({ children: [new Paragraph(discussionText)] }),
+          new TableCell({ children: [new Paragraph(numbering)]  }),
+          new TableCell({ children: [new Paragraph(area.name)]  }),
+          new TableCell({ children: [new Paragraph(measuredLevels || "N/A")]  }),
+          new TableCell({ children: [new Paragraph(avgNoiseLevel)]  }),
+          new TableCell({ children: [new Paragraph(avgNoiseLevel)]  }),
+          new TableCell({ children: [new Paragraph(riskClass)]  }),
+          new TableCell({ children: [new Paragraph(discussionText)]  }),
         ],
       })
     );

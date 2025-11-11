@@ -437,13 +437,13 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
                   </h3>
                   <div className="mt-2 text-sm text-yellow-700">
                     <ul className="list-disc pl-5 space-y-1">
-                      <li>Click "Download Word Report" to preview the comprehensive report (optional)</li>
+                      <li>Click "Download Word Report" to preview the comprehensive report</li>
                       <li>Click "View PDF Fieldsheet" to view and verify the survey data (required)</li>
                       <li>Verify all survey data, measurements, and equipment information</li>
                       <li>Check for any missing or incorrect information</li>
                       <li>Provide detailed comments about your review (required)</li>
                       <li>Draw your signature to confirm the accuracy of the document (required)</li>
-                      <li><strong>When you click "Complete Survey", both the PDF Fieldsheet (with your signature) and Word Report will be automatically downloaded</strong></li>
+                      <li>When you click "Complete Survey", both the PDF Fieldsheet (with your signature) and Word Report will be automatically downloaded</li>
                     </ul>
                   </div>
                 </div>
@@ -695,9 +695,14 @@ export default function Preview({ data, onPrev, onNext, readOnly = false }: Prev
       {!readOnly && (
         <ConfirmDialog
           open={completionDialogOpen}
-          title="Survey Completed!"
-          message="Your survey has been successfully completed and saved. You will now be returned to the dashboard."
-          confirmText="OK"
+          title="Complete Survey & Download Documents"
+          message="Your survey will be marked as completed and the following documents will be downloaded:
+
+• PDF Fieldsheet (with your comments and signature)
+• Word Report (comprehensive noise survey report)
+
+You will then be returned to the dashboard."
+          confirmText="OK - Complete & Download"
           cancelText="Cancel"
           onConfirm={confirmCompleteSurvey}
           onCancel={() => setCompletionDialogOpen(false)}
